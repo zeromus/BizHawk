@@ -141,7 +141,7 @@
       <DependentUpon>AppleII.cs</DependentUpon>
     </Compile>
     <Compile Include="Computers\AppleII\AppleII.ISettable.cs">
-        <DependentUpon>AppleII.cs</DependentUpon>
+      <DependentUpon>AppleII.cs</DependentUpon>
     </Compile>
     <Compile Include="Computers\AppleII\AppleII.IStatable.cs">
       <DependentUpon>AppleII.cs</DependentUpon>
