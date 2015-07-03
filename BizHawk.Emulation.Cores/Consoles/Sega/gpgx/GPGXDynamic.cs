@@ -29,6 +29,7 @@ namespace BizHawk.Emulation.Cores.Consoles.Sega.gpgx
 		IInputPollable, IDebuggable, ISettable<GPGXDynamic.GPGXSettings, GPGXDynamic.GPGXSyncSettings>, IDriveLight
 	{
 		DiscSystem.Disc CD;
+		DiscSystem.DiscSectorReader CDReader;
 		byte[] romfile;
 		bool drivelight;
 
@@ -91,6 +92,7 @@ namespace BizHawk.Emulation.Cores.Consoles.Sega.gpgx
 
 				this.romfile = rom;
 				this.CD = CD;
+				CDReader = new DiscSystem.DiscSectorReader(CD);
 
 				LibGPGXDynamic.INPUT_SYSTEM system_a = LibGPGXDynamic.INPUT_SYSTEM.SYSTEM_NONE;
 				LibGPGXDynamic.INPUT_SYSTEM system_b = LibGPGXDynamic.INPUT_SYSTEM.SYSTEM_NONE;
@@ -291,7 +293,7 @@ namespace BizHawk.Emulation.Cores.Consoles.Sega.gpgx
 				byte[] data = new byte[2352];
 				if (lba < CD.LBACount)
 				{
-					CD.ReadLBA_2352(lba, data, 0);
+					CDReader.ReadLBA_2352(lba, data, 0);
 				}
 				else
 				{
@@ -304,7 +306,7 @@ namespace BizHawk.Emulation.Cores.Consoles.Sega.gpgx
 			else
 			{
 				byte[] data = new byte[2048];
-				CD.ReadLBA_2048(lba, data, 0);
+				CDReader.ReadLBA_2048(lba, data, 0);
 				Marshal.Copy(data, 0, dest, 2048);
 				drivelight = true;
 			}
@@ -327,8 +329,8 @@ namespace BizHawk.Emulation.Cores.Consoles.Sega.gpgx
 			{
 				if (i < ntrack)
 				{
-					ret.tracks[i].start = ses.Tracks[i].Indexes[1].aba - 150;
-					ret.tracks[i].end = ses.Tracks[i].LengthInSectors + ret.tracks[i].start;
+					ret.tracks[i].start = ses.Tracks[i].LBA;
+					ret.tracks[i].end = ses.Tracks[i].Length + ret.tracks[i].start;
 					if (i == ntrack - 1)
 					{
 						ret.end = ret.tracks[i].end;
