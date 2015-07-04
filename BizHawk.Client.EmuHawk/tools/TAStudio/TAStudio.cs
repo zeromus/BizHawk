@@ -325,6 +325,12 @@ namespace BizHawk.Client.EmuHawk
 				return false;
 			}
 
+			if (CurrentTasMovie == null)
+			{
+				Global.MovieSession.Movie = new TasMovie(false, _saveBackgroundWorker);
+				(Global.MovieSession.Movie as TasMovie).TasStateManager.InvalidateCallback = GreenzoneInvalidated;
+			}
+
 			CurrentTasMovie.Filename = file.FullName;
 			try
 			{
@@ -352,6 +358,7 @@ namespace BizHawk.Client.EmuHawk
 			if (AskSaveChanges())
 			{
 				Global.MovieSession.Movie = new TasMovie(false, _saveBackgroundWorker);
+				(Global.MovieSession.Movie as TasMovie).TasStateManager.InvalidateCallback = GreenzoneInvalidated;
 				CurrentTasMovie.PropertyChanged += new PropertyChangedEventHandler(this.TasMovie_OnPropertyChanged);
 				CurrentTasMovie.Filename = DefaultTasProjName(); // TODO don't do this, take over any mainform actions that can crash without a filename
 				CurrentTasMovie.PopulateWithDefaultHeaderValues();
@@ -529,8 +536,7 @@ namespace BizHawk.Client.EmuHawk
 				LoadState(closestState);
 			}
 
-			if (GlobalWin.MainForm.EmulatorPaused)
-				GlobalWin.MainForm.PauseOnFrame = frame;
+			GlobalWin.MainForm.PauseOnFrame = frame;
 			GlobalWin.MainForm.UnpauseEmulator();
 		}
 

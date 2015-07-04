@@ -95,8 +95,53 @@ namespace BizHawk.Client.EmuHawk
 			}
 		}
 
+		#region Event callbacks
+
+		public Func<int, string, Color?> QueryItemBgColorCallback { get; set; }
+
+		private Color? GetColorOverride(int index, InputRoll.RollColumn column)
+		{
+			if (QueryItemBgColorCallback != null)
+			{
+				return QueryItemBgColorCallback(index, column.Name);
+			}
+
+			return null;
+		}
+
+		public Func<int, string, string> QueryItemTextCallback { get; set; }
+
+		private string GetTextOverride(int index, InputRoll.RollColumn column)
+		{
+			if (QueryItemTextCallback != null)
+			{
+				return QueryItemTextCallback(index, column.Name);
+			}
+
+			return null;
+		}
+
+		public Action<int> GreenzoneInvalidatedCallback { get; set; }
+		private void GreenzoneInvalidated(int index)
+		{
+			if (GreenzoneInvalidatedCallback != null)
+			{
+				GreenzoneInvalidatedCallback(index);
+			}
+		}
+
+		#endregion
+
 		private void TasView_QueryItemBkColor(int index, InputRoll.RollColumn column, ref Color color)
 		{
+			var overrideColor = GetColorOverride(index, column);
+
+			if (overrideColor.HasValue)
+			{
+				color = overrideColor.Value;
+				return;
+			}
+
 			string columnName = column.Name;
 
 			if (columnName == MarkerColumnName)
@@ -146,6 +191,13 @@ namespace BizHawk.Client.EmuHawk
 
 		private void TasView_QueryItemText(int index, InputRoll.RollColumn column, out string text)
 		{
+			var overrideText = GetTextOverride(index, column);
+			if (overrideText != null)
+			{
+				text = overrideText;
+				return;
+			}
+
 			try
 			{
 				text = string.Empty;
@@ -285,6 +337,7 @@ namespace BizHawk.Client.EmuHawk
 
 			if (e.Button == MouseButtons.Left)
 			{
+				CurrentTasMovie.SupressGreenzonging = true; // This is necessary because we will invalidate, but we won't navigate until mouse up, during that time the user may have emulated frames and we don't want to caputre states for those
 				_leftButtonHeld = true;
 				// SuuperW: Exit float editing mode, or re-enter mouse editing
 				if (_floatEditRow != -1)
@@ -422,6 +475,7 @@ namespace BizHawk.Client.EmuHawk
 			}
 			else if (e.Button == MouseButtons.Left)
 			{
+				CurrentTasMovie.SupressGreenzonging = false;
 				_startMarkerDrag = false;
 				_startFrameDrag = false;
 				_startBoolDrawColumn = string.Empty;

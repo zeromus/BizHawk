@@ -125,5 +125,68 @@ namespace BizHawk.Client.EmuHawk
 
 			return false;
 		}
+
+		[LuaMethodAttributes(
+			"onqueryitembg",
+			"called during the background draw event of the tastudio listview"
+		)]
+		public void OnQueryItemBg(LuaFunction luaf)
+		{
+			if (Engaged())
+			{
+				Tastudio.QueryItemBgColorCallback = (int index, string name) =>
+				{
+					var result = luaf.Call(index, name);
+
+					if (result != null)
+					{
+						var color = ToColor(result[0]);
+						return color;
+					}
+
+					return null;
+				};
+			}
+		}
+
+		[LuaMethodAttributes(
+			"onqueryitemtext",
+			"called during the text draw event of the tastudio listview"
+		)]
+		public void OnQueryItemText(LuaFunction luaf)
+		{
+			if (Engaged())
+			{
+				Tastudio.QueryItemTextCallback = (int index, string name) =>
+				{
+					var result = luaf.Call(index, name);
+
+					if (result != null)
+					{
+						if (result[0] != null)
+						{
+							return result[0].ToString();
+						}
+					}
+
+					return (string)null;
+				};
+			}
+		}
+
+		[LuaMethodAttributes(
+			"ongreenzoneinvalidated",
+			"called whenever the greenzone is invalidated and returns the first frame that was invalidated"
+		)]
+		public void OnGreenzoneInvalidated(LuaFunction luaf)
+		{
+			if (Engaged())
+			{
+				Tastudio.GreenzoneInvalidatedCallback = (int index) =>
+				{
+					luaf.Call(index);
+				};
+			}
+		}
 	}
 }
