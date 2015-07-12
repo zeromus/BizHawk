@@ -45,13 +45,15 @@ namespace BizHawk.Emulation.DiscSystem
 			//make sector interfaces:
 			for (int i = 0; i < 150; i++)
 			{
-				disc.Sectors.Add(synth);
+				//ZAMMO
+				//disc.Sectors.Add(synth);
 			}
 
 			//2. actual sectors
 			for (int i = 0; i < nSectors; i++)
 			{
-				disc.Sectors.Add(synth);
+				//ZAMMO
+				//disc.Sectors.Add(synth);
 			}
 
 			//ADR (q-Mode) is necessarily 0x01 for a RawTOCEntry

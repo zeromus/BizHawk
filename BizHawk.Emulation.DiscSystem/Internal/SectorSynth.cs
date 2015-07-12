@@ -98,9 +98,81 @@ namespace BizHawk.Emulation.DiscSystem
 		Complete2448 = SubcodeComplete | User2352,
 	}
 
+	/// <summary>
+	/// Basic unit of sector synthesis
+	/// </summary>
 	interface ISectorSynthJob2448
 	{
+		/// <summary>
+		/// Synthesizes a sctor with the given job parameters
+		/// </summary>
 		void Synth(SectorSynthJob job);
+	}
+
+	/// <summary>
+	/// When creating a disc, this is set with a callback that can deliver an ISectorSynthJob2448 for the given LBA
+	/// </summary>
+	interface ISectorSynthProvider
+	{
+		/// <summary>
+		/// Retrieves an ISectorSynthJob2448 for the given LBA
+		/// </summary>
+		ISectorSynthJob2448 Get(int lba);
+	}
+
+	/// <summary>
+	/// A simple ISectorSynthProvider which always returns the same ISectorSynthJob2448
+	/// </summary>
+	class SimpleSectorSynthProvider : ISectorSynthProvider
+	{
+		public ISectorSynthJob2448 Job;
+		public ISectorSynthJob2448 Get(int lba)
+		{
+			return Job;
+		}
+	}
+
+	/// <summary>
+	/// An ISectorSynthProvider which patches another ISectorSynthProvider with an array of optional patches
+	/// </summary>
+	class SparsePatchSectorSynthProvider : ISectorSynthProvider
+	{
+		public int MapStart, MapEnd;
+		public ISectorSynthProvider OldProvider;
+
+		struct PatchRecord
+		{
+			public ISectorSynthJob2448 SS_Patch;
+			public int Index;
+		}
+
+		PatchRecord[] Patches;
+
+
+		public void SetPatch(int lba, int index, ISectorSynthJob2448 ss)
+		{
+			int idx = lba - MapStart;
+			Patches[idx].SS_Patch = ss;
+			Patches[idx].Index = index;
+		}
+
+		public void Initialize(ISectorSynthProvider oldProvider, int start, int end)
+		{
+			OldProvider = oldProvider;
+			MapStart = start;
+			MapEnd = end;
+			int count = MapStart - MapEnd + 1;
+			Patches = new PatchRecord[count];
+		}
+
+		public ISectorSynthJob2448 Get(int lba)
+		{
+			if (lba < MapStart) return OldProvider.Get(lba);
+			if (lba > MapEnd) return OldProvider.Get(lba);
+			var patch = Patches[lba - MapStart].SS_Patch;
+			if (patch == null) return OldProvider.Get(lba);
+			return patch;
+		}
 	}
 
 	/// <summary>
@@ -108,11 +180,35 @@ namespace BizHawk.Emulation.DiscSystem
 	/// </summary>
 	class SectorSynthJob
 	{
+		/// <summary>
+		/// The LBA to synth a sector for
+		/// </summary>
 		public int LBA;
+
+		/// <summary>
+		/// Flags for each part of a sector (and some other flags) which could need generating
+		/// </summary>
 		public ESectorSynthPart Parts;
+
+		/// <summary>
+		/// A target buffer for the synthesis job. Components are always parked at their normal locations within this sector.
+		/// Synthesis is not required to clear the destination buffer
+		/// </summary>
 		public byte[] DestBuffer2448;
+
+		/// <summary>
+		/// Offset within DestBuffer2448 to park data
+		/// </summary>
 		public int DestOffset;
+
+		/// <summary>
+		/// A copy of the SectorSynthParams set on the disc (sector synths will use this to drive the synthesis of multiple sectors from one instance of the sector s ynth)
+		/// </summary>
 		public SectorSynthParams Params;
+
+		/// <summary>
+		/// The disc that's being worked on.. just in case you need it, I guess
+		/// </summary>
 		public Disc Disc;
 	}
 
@@ -125,6 +221,11 @@ namespace BizHawk.Emulation.DiscSystem
 	{
 		public long[] BlobOffsets;
 		public MednaDisc MednaDisc;
+
+		/// <summary>
+		/// used by the SBI patcher to store offsets within the 
+		/// </summary>
+		public int[] SBIOffsets;
 	}
 
 
