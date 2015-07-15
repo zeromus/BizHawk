@@ -196,7 +196,7 @@ namespace BizHawk.Emulation.DiscSystem
 			{
 				//we need to determine the type of the sector.
 				//in no case do we need the ECC so build special flags here
-				var sector = disc.Sectors[lba + 150];
+				var sector = disc.SynthProvider.Get(lba);
 
 				PrepareBuffer(buffer, offset, 2048);
 				PrepareJob(lba);
@@ -271,7 +271,7 @@ namespace BizHawk.Emulation.DiscSystem
 		/// </summary>
 		public int ReadLBA_Mode(int lba)
 		{
-			var sector = disc.Sectors[lba + 150];
+			var sector = disc.SynthProvider.Get(lba);
 
 			PrepareJob(lba);
 			job.DestBuffer2448 = buf2442;
