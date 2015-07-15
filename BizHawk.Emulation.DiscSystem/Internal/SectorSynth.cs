@@ -132,6 +132,7 @@ namespace BizHawk.Emulation.DiscSystem
 		}
 	}
 
+
 	/// <summary>
 	/// An ISectorSynthProvider which patches another ISectorSynthProvider with an array of optional patches
 	/// </summary>
@@ -222,10 +223,7 @@ namespace BizHawk.Emulation.DiscSystem
 		public long[] BlobOffsets;
 		public MednaDisc MednaDisc;
 
-		/// <summary>
-		/// used by the SBI patcher to store offsets within the 
-		/// </summary>
-		public int[] SBIOffsets;
+		public ApplySBIJob.SBIPatch SBIPatch;
 	}
 
 

@@ -9,13 +9,51 @@ namespace BizHawk.Emulation.DiscSystem
 {
 	class ApplySBIJob
 	{
-		class SBIPatch : ISectorSynthJob2448
+		public class SBIPatch
 		{
 			Disc disc;
 			SBI.SubQPatchData sbi;
 			bool asMednafen;
 
 			ISectorSynthProvider oldProvider;
+
+			class SS_SBIPatch : ISectorSynthJob2448
+			{
+				public int SBIOffset;
+
+				public void Synth(SectorSynthJob job)
+				{
+					//run the earlier synthesizer
+					job.Params.SBIPatch.oldProvider.Get(job.LBA).Synth(job);
+					var sbi = job.Params.SBIPatch.sbi;
+
+					//if subQ was requested, it's now provided; we should patch it
+					if ((job.Parts & ESectorSynthPart.SubchannelQ) != 0)
+					{
+						var buf = job.DestBuffer2448;
+						var ofs = job.DestOffset + 2352 + 12;
+						int b = SBIOffset;
+
+						//apply SBI patch
+						for (int j = 0; j < 12; j++)
+						{
+							short patch = sbi.subq[b++];
+							if (patch == -1) continue;
+							else buf[ofs + j] = (byte)patch;
+						}
+
+						//Apply mednafen hacks
+						//The reasoning here is that we know we expect these sectors to have a wrong checksum. therefore, generate a checksum, and make it wrong
+						//However, this seems senseless to me. The whole point of the SBI data is that it stores the patches needed to generate an acceptable subQ, right?
+						//if (asMednafen) //ehh, lets always do it this way for now
+						{
+							SynthUtils.SubQ_SynthChecksum(buf, ofs);
+							buf[ofs + 10] ^= 0xFF;
+							buf[ofs + 11] ^= 0xFF;
+						}
+					}
+				}
+			}
 
 			public SBIPatch(Disc disc, SBI.SubQPatchData sbi, bool asMednafen)
 			{
@@ -38,41 +76,16 @@ namespace BizHawk.Emulation.DiscSystem
 				disc.SynthProvider = spssp;
 
 				//set patches
+				int ofs = 0;
 				for (int i = 0; i < sbi.ABAs.Count; i++)
 				{
 					int lba = sbi.ABAs[i] + 150;
-					spssp.SetPatch(lba, i, this);
-				}
-			}
-
-			public void Synth(SectorSynthJob job)
-			{
-				//run the earlier synthesizer
-				oldProvider.Get(job.LBA).Synth(job);
-
-				//if subQ was requested, it's now provided; we should patch it
-				if ((job.Parts & ESectorSynthPart.SubchannelQ) != 0)
-				{
-					var buf = job.DestBuffer2448;
-					var ofs = job.DestOffset + 2352 + 12;
-
-					//apply SBI patch
-					for (int j = 0; j < 12; j++)
+					var ss = new SS_SBIPatch()
 					{
-						short patch = sbi.subq[b++];
-						if (patch == -1) continue;
-						else buf[ofs+j] = (byte)patch;
-					}
-
-					//Apply mednafen hacks
-					//The reasoning here is that we know we expect these sectors to have a wrong checksum. therefore, generate a checksum, and make it wrong
-					//However, this seems senseless to me. The whole point of the SBI data is that it stores the patches needed to generate an acceptable subQ, right?
-					if (asMednafen)
-					{
-						SynthUtils.SubQ_SynthChecksum(subQbuf, 0);
-						subQbuf[10] ^= 0xFF;
-						subQbuf[11] ^= 0xFF;
-					}
+						SBIOffset = ofs
+					};
+					spssp.SetPatch(lba, i, ss);
+					ofs += 12;
 				}
 			}
 		}
@@ -82,49 +95,7 @@ namespace BizHawk.Emulation.DiscSystem
 		/// </summary>
 		public void Run(Disc disc, SBI.SubQPatchData sbi, bool asMednafen)
 		{
-			//TODO - could implement as a blob, to avoid allocating so many byte buffers
-
-			//save this, it's small, and we'll want it for disc processing a/b checks
-			disc.Memos["sbi"] = sbi;
-
-
-
-			DiscSectorReader dsr = new DiscSectorReader(disc);
-
-			int n = sbi.ABAs.Count;
-			int b = 0;
-			for (int i = 0; i < n; i++)
-			{
-				int lba = sbi.ABAs[i] - 150;
-
-				//create a synthesizer which can return the patched data
-				var ss_patchq = new SS_PatchQ() { Original = disc.Sectors[lba + 150] };
-				byte[] subQbuf = ss_patchq.Buffer_SubQ;
-
-				//read the old subcode
-				dsr.ReadLBA_SubQ(lba, subQbuf, 0);
-
-				//insert patch
-				disc.Sectors[lba + 150] = ss_patchq;
-
-				//apply SBI patch
-				for (int j = 0; j < 12; j++)
-				{
-					short patch = sbi.subq[b++];
-					if (patch == -1) continue;
-					else subQbuf[j] = (byte)patch;
-				}
-
-				//Apply mednafen hacks
-				//The reasoning here is that we know we expect these sectors to have a wrong checksum. therefore, generate a checksum, and make it wrong
-				//However, this seems senseless to me. The whole point of the SBI data is that it stores the patches needed to generate an acceptable subQ, right?
-				if (asMednafen)
-				{
-					SynthUtils.SubQ_SynthChecksum(subQbuf, 0);
-					subQbuf[10] ^= 0xFF;
-					subQbuf[11] ^= 0xFF;
-				}
-			}
+			SBIPatch patch = new SBIPatch(disc, sbi, asMednafen);
 		}
 	}
 }

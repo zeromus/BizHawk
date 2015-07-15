@@ -90,7 +90,7 @@ namespace BizHawk.Emulation.DiscSystem
 		/// <summary>
 		/// The interface used to retrieve the synthesizer for a sector
 		/// </summary>
-		internal ISectorSynthProvider GetSectorSynth;
+		internal ISectorSynthProvider SynthProvider;
 
 		/// <summary>
 		/// Parameters set during disc loading which can be referenced by the sector synthesizers
