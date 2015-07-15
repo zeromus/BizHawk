@@ -481,6 +481,12 @@ namespace BizHawk.Emulation.DiscSystem
 			}
 		}
 
+		class CCDSynthProvider : ISectorSynthProvider
+		{
+			public ISectorSynthJob2448 Get(int lba)
+			{
+			}
+		}
 
 		/// <summary>
 		/// Loads a CCD at the specified path to a Disc object
@@ -502,6 +508,8 @@ namespace BizHawk.Emulation.DiscSystem
 
 			//the only instance of a sector synthesizer we'll need
 			SS_CCD synth = new SS_CCD();
+
+			int curr_output_aba = 0;
 
 			//generate DiscTOCRaw items from the ones specified in the CCD file
 			//TODO - range validate these (too many truncations to byte)
@@ -565,7 +573,6 @@ namespace BizHawk.Emulation.DiscSystem
 					Policy = IN_DiscMountPolicy,
 					TrackType = pregapTrackType
 				};
-				disc.Sectors.Add(ss_gap);
 
 				int qRelMSF = i - 150;
 
@@ -583,6 +590,8 @@ namespace BizHawk.Emulation.DiscSystem
 
 				//setup subP
 				ss_gap.Pause = true;
+
+				curr_output_aba++;
 			}
 
 			//build the sectors:
@@ -590,7 +599,8 @@ namespace BizHawk.Emulation.DiscSystem
 			//(the TOC is unreliable, and the Track records are redundant)
 			for (int i = 0; i < loadResults.NumImgSectors; i++)
 			{
-				disc.Sectors.Add(synth);
+				//disc.Sectors.Add(synth);
+				//lame-o
 			}
 
 			return disc;
