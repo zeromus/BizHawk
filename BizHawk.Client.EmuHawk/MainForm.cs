@@ -1962,6 +1962,93 @@ namespace BizHawk.Client.EmuHawk
 			LoadRom(file.FullName);
 		}
 
+		private void OpenRomExperimental()
+		{
+			//we can use this to check whether the required >= vista is available
+			if (!Microsoft.WindowsAPICodePack.Dialogs.CommonOpenFileDialog.IsPlatformSupported)
+				throw new NotSupportedException();
+
+			var ofd = new Microsoft.WindowsAPICodePack.Dialogs.CommonOpenFileDialog();
+			
+			ofd.InitialDirectory = PathManager.GetRomsPath(Global.Emulator.SystemId);
+			//ofd.Filter = RomFilter;
+			ofd.RestoreDirectory = false;
+			//ofd.FilterIndex = _lastOpenRomFilter;
+
+			//get a list of system ids.
+			//i guess then we'll sort them alphabetically by display name
+			var sysids = new Dictionary<string,string>();
+			foreach (var e in Global.Config.PathEntries)
+				sysids[e.SystemDisplayName] = e.System;
+			var dispnames = new List<string>(sysids.Keys.ToArray());
+			dispnames.Sort();
+			
+			//I. add places for each of them
+			//OH NO! doesnt work well. 
+			//1. No way to name the items independently from the paths
+			//2. ugly assembly name shows up at top level
+			//this might be worth future exploration though:
+			//https://msdn.microsoft.com/en-us/library/windows/desktop/bb775946%28v=vs.85%29.aspx
+			foreach (var dn in dispnames)
+			{
+				if (dn == "Global")
+					continue;
+				var path = PathManager.GetRomsPath(sysids[dn]);
+				if (Directory.Exists(path))
+				{
+					var targetDir = Microsoft.WindowsAPICodePack.Shell.ShellContainer.FromParsingName(path) as Microsoft.WindowsAPICodePack.Shell.ShellContainer;
+					ofd.AddPlace(targetDir, Microsoft.WindowsAPICodePack.Shell.FileDialogAddPlaceLocation.Bottom);
+					
+					//here we go again...
+					var nsi = targetDir.GetType().GetProperty("NativeShellItem", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(targetDir, new object[] { }) as Win32.IShellItem;
+					
+					//doesn't work....
+					var val = new Win32.PropVariant();
+					var str = System.Runtime.InteropServices.Marshal.StringToBSTR("POOP");
+					val.Value = str;
+					val.VarType = System.Runtime.InteropServices.VarEnum.VT_BSTR;
+					Win32.SHSetTemporaryPropertyForItem(nsi, ref Win32.PropertyKey.PKEY_ItemNameDisplay, ref val);
+				}
+			}
+
+			//II. Use a combo box to add items. This is madness. It works OK, but the combo box is sloppy and doesnt support the mouse wheel.
+			var cb = new Microsoft.WindowsAPICodePack.Dialogs.Controls.CommonFileDialogComboBox();
+			List<string> paths = new List<string>();
+			cb.SelectedIndexChanged += (object sender, EventArgs e) =>
+			{
+				//lovely. this wasn't exposed by microsoft.
+				var targetDir = Microsoft.WindowsAPICodePack.Shell.ShellObject.FromParsingName(paths[cb.SelectedIndex]);
+				var nativeDialog = typeof(Microsoft.WindowsAPICodePack.Dialogs.CommonFileDialog).GetField("nativeDialog", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(ofd) as Win32.IFileDialog;
+				var nsi = targetDir.GetType().GetProperty("NativeShellItem", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(targetDir, new object[] { });
+				nativeDialog.SetFolder((Win32.IShellItem)nsi);
+			};
+			foreach (var dn in dispnames)
+			{
+				if (dn == "Global") continue;
+				var sysid = sysids[dn];
+				var path = PathManager.GetRomsPath(sysid);
+				if (!Directory.Exists(path))
+					continue;
+				var cbi = new Microsoft.WindowsAPICodePack.Dialogs.Controls.CommonFileDialogComboBoxItem(dn);
+				cb.Items.Add(cbi);
+				paths.Add(path);
+				if (sysid == Global.Emulator.SystemId)
+					cb.SelectedIndex = cb.Items.Count - 1;
+			}
+			ofd.Controls.Add(cb);
+
+			var result = ofd.ShowDialog();
+			if (result != Microsoft.WindowsAPICodePack.Dialogs.CommonFileDialogResult.Ok)
+			{
+				return;
+			}
+
+			var file = new FileInfo(ofd.FileName);
+			Global.Config.LastRomPath = file.DirectoryName;
+			//_lastOpenRomFilter = ofd.FilterIndex;
+			LoadRom(file.FullName);
+		}
+
 		private void CoreSyncSettings(object sender, RomLoader.SettingsLoadArgs e)
 		{
 			if (Global.MovieSession.QueuedMovie != null)
