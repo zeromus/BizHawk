@@ -1940,7 +1940,7 @@ namespace BizHawk.Client.EmuHawk
 			}
 		}
 
-		private void OpenRom()
+		private void OldOpenRom()
 		{
 			var ofd = new OpenFileDialog
 			{
@@ -1962,7 +1962,7 @@ namespace BizHawk.Client.EmuHawk
 			LoadRom(file.FullName);
 		}
 
-		private void OpenRomExperimental()
+		private void OpenRom()
 		{
 			//we can use this to check whether the required >= vista is available
 			if (!Microsoft.WindowsAPICodePack.Dialogs.CommonOpenFileDialog.IsPlatformSupported)
@@ -1983,33 +1983,33 @@ namespace BizHawk.Client.EmuHawk
 			var dispnames = new List<string>(sysids.Keys.ToArray());
 			dispnames.Sort();
 			
-			//I. add places for each of them
-			//OH NO! doesnt work well. 
-			//1. No way to name the items independently from the paths
-			//2. ugly assembly name shows up at top level
-			//this might be worth future exploration though:
-			//https://msdn.microsoft.com/en-us/library/windows/desktop/bb775946%28v=vs.85%29.aspx
-			foreach (var dn in dispnames)
-			{
-				if (dn == "Global")
-					continue;
-				var path = PathManager.GetRomsPath(sysids[dn]);
-				if (Directory.Exists(path))
-				{
-					var targetDir = Microsoft.WindowsAPICodePack.Shell.ShellContainer.FromParsingName(path) as Microsoft.WindowsAPICodePack.Shell.ShellContainer;
-					ofd.AddPlace(targetDir, Microsoft.WindowsAPICodePack.Shell.FileDialogAddPlaceLocation.Bottom);
+			////I. add places for each of them
+			////OH NO! doesnt work well. 
+			////1. No way to name the items independently from the paths
+			////2. ugly assembly name shows up at top level
+			////this might be worth future exploration though:
+			////https://msdn.microsoft.com/en-us/library/windows/desktop/bb775946%28v=vs.85%29.aspx
+			//foreach (var dn in dispnames)
+			//{
+			//  if (dn == "Global")
+			//    continue;
+			//  var path = PathManager.GetRomsPath(sysids[dn]);
+			//  if (Directory.Exists(path))
+			//  {
+			//    var targetDir = Microsoft.WindowsAPICodePack.Shell.ShellContainer.FromParsingName(path) as Microsoft.WindowsAPICodePack.Shell.ShellContainer;
+			//    ofd.AddPlace(targetDir, Microsoft.WindowsAPICodePack.Shell.FileDialogAddPlaceLocation.Bottom);
 					
-					//here we go again...
-					var nsi = targetDir.GetType().GetProperty("NativeShellItem", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(targetDir, new object[] { }) as Win32.IShellItem;
+			//    //here we go again...
+			//    var nsi = targetDir.GetType().GetProperty("NativeShellItem", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(targetDir, new object[] { }) as Win32.IShellItem;
 					
-					//doesn't work....
-					var val = new Win32.PropVariant();
-					var str = System.Runtime.InteropServices.Marshal.StringToBSTR("POOP");
-					val.Value = str;
-					val.VarType = System.Runtime.InteropServices.VarEnum.VT_BSTR;
-					Win32.SHSetTemporaryPropertyForItem(nsi, ref Win32.PropertyKey.PKEY_ItemNameDisplay, ref val);
-				}
-			}
+			//    //doesn't work....
+			//    var val = new Win32.PropVariant();
+			//    var str = System.Runtime.InteropServices.Marshal.StringToBSTR("POOP");
+			//    val.Value = str;
+			//    val.VarType = System.Runtime.InteropServices.VarEnum.VT_BSTR;
+			//    Win32.SHSetTemporaryPropertyForItem(nsi, ref Win32.PropertyKey.PKEY_ItemNameDisplay, ref val);
+			//  }
+			//}
 
 			//II. Use a combo box to add items. This is madness. It works OK, but the combo box is sloppy and doesnt support the mouse wheel.
 			var cb = new Microsoft.WindowsAPICodePack.Dialogs.Controls.CommonFileDialogComboBox();
