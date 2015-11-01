@@ -549,6 +549,12 @@
     <Compile Include="Extensions\ControlExtensions.cs" />
     <Compile Include="Extensions\CoreExtensions.cs" />
     <Compile Include="Extensions\ToolExtensions.cs" />
+    <Compile Include="StateChooser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StateChooser.Designer.cs">
+      <DependentUpon>StateChooser.cs</DependentUpon>
+    </Compile>
     <Compile Include="GLManager.cs" />
     <Compile Include="GlobalWin.cs" />
     <Compile Include="Input\GamePad.cs" Condition=" '$(OS)' == 'Windows_NT' " />
@@ -1326,6 +1332,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="RomStatusPicker.resx">
       <DependentUpon>RomStatusPicker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StateChooser.resx">
+      <DependentUpon>StateChooser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="tools\AutoHawk.resx">
       <DependentUpon>AutoHawk.cs</DependentUpon>

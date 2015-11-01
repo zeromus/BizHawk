@@ -337,6 +337,11 @@ namespace BizHawk.Client.EmuHawk
 			LoadStateAs();
 		}
 
+		private void LoadStateChooserMenuItem_Click(object sender, EventArgs e)
+		{
+			new StateChooser().ShowHawkDialog();
+		}
+
 		private void AutoloadLastSlotMenuItem_Click(object sender, EventArgs e)
 		{
 			Global.Config.AutoLoadLastSaveSlot ^= true;
