@@ -884,28 +884,7 @@ namespace BizHawk.Client.EmuHawk
 
 		public void TakeScreenshot()
 		{
-			string fmt = "{0}.{1:yyyy-MM-dd HH.mm.ss}{2}.png";
-			string prefix = PathManager.ScreenshotPrefix(Global.Game);
-			var ts = DateTime.Now;
-
-			string fname_bare = string.Format(fmt, prefix, ts, "");
-			string fname = string.Format(fmt, prefix, ts, " (0)");
-
-			//if the (0) filename exists, do nothing. we'll bump up the number later
-			//if the bare filename exists, move it to (0)
-			//otherwise, no related filename exists, and we can proceed with the bare filename
-			if (File.Exists(fname)) { }
-			else if (File.Exists(fname_bare))
-				File.Move(fname_bare, fname);
-			else fname = fname_bare;
-			int seq = 0;
-			while (File.Exists(fname))
-			{
-				var sequence = string.Format(" ({0})", seq++);
-				fname = string.Format(fmt, prefix, ts, sequence);
-			} 
-				
-			TakeScreenshot(fname);
+			TakeScreenshot(Util.MakeTimestampFilename(PathManager.ScreenshotPrefix(Global.Game)) + ".png");
 		}
 
 		public void TakeScreenshot(string path)
@@ -2722,7 +2701,7 @@ namespace BizHawk.Client.EmuHawk
 
 			try
 			{
-				SavestateManager.SaveStateFile(path, userFriendlyStateName);
+				SavestateManager.SaveStateFile(path);
 
 				GlobalWin.OSD.AddMessage("Saved state: " + userFriendlyStateName);
 			}
@@ -3581,6 +3560,25 @@ namespace BizHawk.Client.EmuHawk
 				SetMainformMovieInfo();
 				SetWindowText();
 				return false;
+			}
+		}
+
+		public void SaveSequentialSave()
+		{
+			if (!Global.Emulator.HasSavestates())
+				return;
+
+			var path = Util.MakeTimestampFilename(PathManager.SaveStatePrefix(Global.Game)) + ".state";
+			if(!Directory.Exists(Path.GetDirectoryName(path)))
+				Directory.CreateDirectory(Path.GetDirectoryName(path));
+
+			try
+			{
+				SavestateManager.SaveStateFile(path);
+				GlobalWin.OSD.AddMessage("Saved sequential state");
+			}
+			catch
+			{
 			}
 		}
 

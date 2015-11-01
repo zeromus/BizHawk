@@ -32,6 +32,9 @@ namespace BizHawk.Client.EmuHawk
 				case "Quick Save": 
 					SaveQuickSave("QuickSave" + Global.Config.SaveSlot);
 					break;
+				case "Sequential Save":
+					SaveSequentialSave();
+					break;
 				case "Clear Autohold":
 					ClearAutohold();
 					break;

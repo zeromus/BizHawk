@@ -24,6 +24,34 @@ namespace BizHawk.Common
 			}
 		}
 
+		/// <summary>
+		/// Generates a relatively friendly filename based on a timestamp, taking care to handle dups taken in the same second somehow.
+		/// </summary>
+		public static string MakeTimestampFilename(string prefix)
+		{
+			string fmt = "{0}.{1:yyyy-MM-dd HH.mm.ss}{2}";
+			var ts = DateTime.Now;
+
+			string fname_bare = string.Format(fmt, prefix, ts, "");
+			string fname = string.Format(fmt, prefix, ts, " (0)");
+
+			//if the (0) filename exists, do nothing. we'll bump up the number later
+			//if the bare filename exists, move it to (0)
+			//otherwise, no related filename exists, and we can proceed with the bare filename
+			if (File.Exists(fname)) { }
+			else if (File.Exists(fname_bare))
+				File.Move(fname_bare, fname);
+			else fname = fname_bare;
+			int seq = 0;
+			while (File.Exists(fname))
+			{
+				var sequence = string.Format(" ({0})", seq++);
+				fname = string.Format(fmt, prefix, ts, sequence);
+			}
+
+			return fname;
+		}
+
 		public static bool IsPowerOfTwo(int x)
 		{
 			if (x == 0 || x == 1)

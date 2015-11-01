@@ -13,7 +13,7 @@ namespace BizHawk.Client.Common
 {
 	public static class SavestateManager
 	{
-		public static void SaveStateFile(string filename, string name)
+		public static void SaveStateFile(string filename)
 		{
 			var core = Global.Emulator.AsStatable();
 			// the old method of text savestate save is now gone.

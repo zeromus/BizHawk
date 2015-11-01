@@ -119,6 +119,7 @@ namespace BizHawk.Client.Common
 						new Binding { DisplayName = "Hard Reset", Bindings = "", TabGroup = "General", DefaultBinding = "" },
 						new Binding { DisplayName = "Quick Load", Bindings = "P", TabGroup = "General", DefaultBinding = "P" },
 						new Binding { DisplayName = "Quick Save", Bindings = "I", TabGroup = "General", DefaultBinding = "I" },
+						new Binding { DisplayName = "Sequential Save", Bindings = "", TabGroup = "General", DefaultBinding = "" },
 						new Binding { DisplayName = "Autohold", Bindings = "", TabGroup = "General", DefaultBinding = "" },
 						new Binding { DisplayName = "Clear Autohold", Bindings = "", TabGroup = "General", DefaultBinding = "" },
 						new Binding { DisplayName = "Screenshot", Bindings = "F12", TabGroup = "General", DefaultBinding = "F12" },
