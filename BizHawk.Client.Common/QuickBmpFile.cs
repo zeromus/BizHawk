@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using BizHawk.Emulation.Common;
 using System.Runtime.InteropServices;
 using System.IO;
+
+using BizHawk.Bizware.BizwareGL;
+using BizHawk.Emulation.Common;
 
 namespace BizHawk.Client.Common
 {
@@ -201,6 +203,32 @@ namespace BizHawk.Client.Common
 			public int BufferWidth { get; set; }
 			public int BufferHeight { get; set; }
 			public int BackgroundColor { get { return unchecked((int)0xff000000); } }
+		}
+
+		public unsafe static bool Load(out BizHawk.Bizware.BizwareGL.BitmapBuffer bb, Stream s)
+		{
+			bb = null;
+
+			var bf = BITMAPFILEHEADER.FromStream(s);
+			var bi = BITMAPINFOHEADER.FromStream(s);
+			if (bf.bfType != 0x4d42
+				|| bf.bfOffBits != bf.bfSize + bi.biSize
+				|| bi.biPlanes != 1
+				|| bi.biBitCount != 32
+				|| bi.biCompression != BitmapCompressionMode.BI_RGB)
+				return false;
+			int in_w = bi.biWidth;
+			int in_h = bi.biHeight;
+
+			bb = new Bizware.BizwareGL.BitmapBuffer(in_w, in_h);
+
+			byte[] src = new byte[in_w * in_h * 4];
+			s.Read(src, 0, src.Length);
+			fixed (byte* pSrc = src)
+				bb.LoadFrom(in_w, in_w, in_h, pSrc, new BitmapLoadOptions());
+			bb.YFlip();
+
+			return true;
 		}
 
 		public unsafe static bool Load(IVideoProvider v, Stream s)
