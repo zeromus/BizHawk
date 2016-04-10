@@ -96,6 +96,9 @@ public:
 	void saveSavedata(char *dest) { cart.saveSavedata(dest); }
 	void updateInput();
 
+	void setGameGenie(std::string const &codes) { cart.setGameGenie(codes); }
+	void setGameShark(std::string const &codes) { /*interrupter.setGameShark(codes);*/ } //not done yet
+
 	bool getMemoryArea(int which, unsigned char **data, int *length); // { return cart.getMemoryArea(which, data, length); }
 
 	unsigned long stop(unsigned long cycleCounter);

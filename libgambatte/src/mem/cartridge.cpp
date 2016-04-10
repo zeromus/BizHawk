@@ -739,6 +739,52 @@ bool Cartridge::getMemoryArea(int which, unsigned char **data, int *length) cons
 	return false;
 }
 
+static int asHex(char c) {
+	return c >= 'A' ? c - 'A' + 0xA : c - '0';
+}
+
+void Cartridge::applyGameGenie(std::string const &code) {
+	if (6 < code.length()) {
+		unsigned const val = (asHex(code[0]) << 4 | asHex(code[1])) & 0xFF;
+		unsigned const addr = (    asHex(code[2])        <<  8
+		                        |  asHex(code[4])        <<  4
+		                        |  asHex(code[5])
+		                        | (asHex(code[6]) ^ 0xF) << 12) & 0x7FFF;
+		unsigned cmp = 0xFFFF;
+		if (10 < code.length()) {
+			cmp = (asHex(code[8]) << 4 | asHex(code[10])) ^ 0xFF;
+			cmp = ((cmp >> 2 | cmp << 6) ^ 0x45) & 0xFF;
+		}
+
+		for (unsigned bank = 0; bank < std::size_t(memptrs.romdataend() - memptrs.romdata()) / 0x4000; ++bank) {
+			if (mbc->isAddressWithinAreaRombankCanBeMappedTo(addr, bank)
+					&& (cmp > 0xFF || memptrs.romdata()[bank * 0x4000ul + (addr & 0x3FFF)] == cmp)) {
+				ggUndoList_.push_back(AddrData(bank * 0x4000ul + (addr & 0x3FFF),
+				                      memptrs.romdata()[bank * 0x4000ul + (addr & 0x3FFF)]));
+				memptrs.romdata()[bank * 0x4000ul + (addr & 0x3FFF)] = val;
+			}
+		}
+	}
+}
+
+void Cartridge::setGameGenie(std::string const &codes) {
+	if (loaded()) {
+		for (std::vector<AddrData>::reverse_iterator it =
+				ggUndoList_.rbegin(), end = ggUndoList_.rend(); it != end; ++it) {
+			if (memptrs.romdata() + it->addr < memptrs.romdataend())
+				memptrs.romdata()[it->addr] = it->data;
+		}
+
+		ggUndoList_.clear();
+
+		std::string code;
+		for (std::size_t pos = 0; pos < codes.length(); pos += code.length() + 1) {
+			code = codes.substr(pos, codes.find(';', pos) - pos);
+			applyGameGenie(code);
+		}
+	}
+}
+
 SYNCFUNC(Cartridge)
 {
 	SSS(memptrs);

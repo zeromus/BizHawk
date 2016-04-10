@@ -124,6 +124,9 @@ public:
 
 	void GetRegs(int *dest);
 
+	void setGameGenie(std::string const &codes) { memory.setGameGenie(codes); }
+	void setGameShark(std::string const &codes) { memory.setGameShark(codes); }
+
 	template<bool isReader>void SyncState(NewState *ns);
 };
 

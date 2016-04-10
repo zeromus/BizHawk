@@ -223,6 +223,14 @@ void GB::GetRegs(int *dest) {
 	p_->cpu.GetRegs(dest);
 }
 
+void GB::setGameGenie(std::string const &codes) {
+	p_->cpu.setGameGenie(codes);
+}
+
+void GB::setGameShark(std::string const &codes) {
+	p_->cpu.setGameShark(codes);
+}
+
 SYNCFUNC(GB)
 {
 	SSS(p_->cpu);

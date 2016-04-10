@@ -100,11 +100,26 @@ public:
 	int loadROM(const char *romfiledata, unsigned romfilelength, bool forceDmg, bool multicartCompat);
 	const char * romTitle() const { return reinterpret_cast<const char *>(memptrs.romdata() + 0x134); }
 
+	void setGameGenie(std::string const &codes);
+
 	void setRTCCallback(std::uint32_t (*callback)()) {
 		rtc.setRTCCallback(callback);
 	}
 
 	template<bool isReader>void SyncState(NewState *ns);
+
+private:
+
+	struct AddrData {
+		unsigned long addr;
+		unsigned char data;
+		AddrData(unsigned long addr, unsigned data) : addr(addr), data(data) {}
+	};
+
+	std::vector<AddrData> ggUndoList_;
+
+	void applyGameGenie(std::string const &code);
+
 };
 
 }

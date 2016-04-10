@@ -29,6 +29,11 @@ GBEXPORT void gambatte_destroy(GB *g)
 	delete g;
 }
 
+GBEXPORT void gambatte_setgg(GB *g, const char* ggstring)
+{
+	g->setGameGenie(ggstring);
+}
+
 GBEXPORT int gambatte_load(GB *g, const char *romfiledata, unsigned romfilelength, long long now, unsigned flags)
 {
 	int ret = g->load(romfiledata, romfilelength, now, flags);
