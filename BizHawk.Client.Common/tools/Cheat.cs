@@ -20,7 +20,14 @@ namespace BizHawk.Client.Common
 		private int _val;
 		private bool _enabled;
 		private COMPARISONTYPE _comparisonType;
-		
+		private string _customString;
+		private MemoryDomain _customMemoryDomain;
+
+		public Cheat(MemoryDomain customMemoryDomain, string customString)
+		{
+			_customString = customString;
+			_customMemoryDomain = customMemoryDomain;
+		}
 
 		public Cheat(Watch watch, int value, int? compare = null, bool enabled = true, COMPARISONTYPE comparisonType = COMPARISONTYPE.NONE)
 		{
@@ -95,6 +102,11 @@ namespace BizHawk.Client.Common
 		public int? Compare
 		{
 			get { return _compare.HasValue && !IsSeparator ? _compare : null; }
+		}
+
+		public string CustomCheatString
+		{
+			get { return _customString; }
 		}
 
 		public MemoryDomain Domain

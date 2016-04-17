@@ -93,6 +93,10 @@
 			this.MessageLabel = new System.Windows.Forms.Label();
 			this.CheatGroupBox = new System.Windows.Forms.GroupBox();
 			this.CheatEditor = new BizHawk.Client.EmuHawk.CheatEdit();
+			this.DomainDropDown = new System.Windows.Forms.ComboBox();
+			this.DomainLabel = new System.Windows.Forms.Label();
+			this.label1 = new System.Windows.Forms.Label();
+			this.TypeDropDown = new System.Windows.Forms.ComboBox();
 			this.CheatsContextMenu.SuspendLayout();
 			this.CheatsMenu.SuspendLayout();
 			this.toolStrip1.SuspendLayout();
@@ -181,7 +185,7 @@
             this.DisableAllContextMenuItem,
             this.ViewInHexEditorContextMenuItem});
 			this.CheatsContextMenu.Name = "contextMenuStrip1";
-			this.CheatsContextMenu.Size = new System.Drawing.Size(170, 92);
+			this.CheatsContextMenu.Size = new System.Drawing.Size(161, 92);
 			this.CheatsContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.CheatsContextMenu_Opening);
 			// 
 			// ToggleContextMenuItem
@@ -189,7 +193,7 @@
 			this.ToggleContextMenuItem.Image = global::BizHawk.Client.EmuHawk.Properties.Resources.Refresh1;
 			this.ToggleContextMenuItem.Name = "ToggleContextMenuItem";
 			this.ToggleContextMenuItem.ShortcutKeyDisplayString = "Enter";
-			this.ToggleContextMenuItem.Size = new System.Drawing.Size(169, 22);
+			this.ToggleContextMenuItem.Size = new System.Drawing.Size(160, 22);
 			this.ToggleContextMenuItem.Text = "&Toggle";
 			this.ToggleContextMenuItem.Click += new System.EventHandler(this.ToggleMenuItem_Click);
 			// 
@@ -198,7 +202,7 @@
 			this.RemoveContextMenuItem.Image = global::BizHawk.Client.EmuHawk.Properties.Resources.Delete;
 			this.RemoveContextMenuItem.Name = "RemoveContextMenuItem";
 			this.RemoveContextMenuItem.ShortcutKeyDisplayString = "Delete";
-			this.RemoveContextMenuItem.Size = new System.Drawing.Size(169, 22);
+			this.RemoveContextMenuItem.Size = new System.Drawing.Size(160, 22);
 			this.RemoveContextMenuItem.Text = "&Remove";
 			this.RemoveContextMenuItem.Click += new System.EventHandler(this.RemoveCheatMenuItem_Click);
 			// 
@@ -206,14 +210,14 @@
 			// 
 			this.DisableAllContextMenuItem.Image = global::BizHawk.Client.EmuHawk.Properties.Resources.Stop;
 			this.DisableAllContextMenuItem.Name = "DisableAllContextMenuItem";
-			this.DisableAllContextMenuItem.Size = new System.Drawing.Size(169, 22);
+			this.DisableAllContextMenuItem.Size = new System.Drawing.Size(160, 22);
 			this.DisableAllContextMenuItem.Text = "&Disable All";
 			this.DisableAllContextMenuItem.Click += new System.EventHandler(this.DisableAllCheatsMenuItem_Click);
 			// 
 			// ViewInHexEditorContextMenuItem
 			// 
 			this.ViewInHexEditorContextMenuItem.Name = "ViewInHexEditorContextMenuItem";
-			this.ViewInHexEditorContextMenuItem.Size = new System.Drawing.Size(169, 22);
+			this.ViewInHexEditorContextMenuItem.Size = new System.Drawing.Size(160, 22);
 			this.ViewInHexEditorContextMenuItem.Text = "View in Hex Editor";
 			this.ViewInHexEditorContextMenuItem.Click += new System.EventHandler(this.ViewInHexEditorContextMenuItem_Click);
 			// 
@@ -242,7 +246,7 @@
             this.toolStripSeparator1,
             this.ExitMenuItem});
 			this.FileSubMenu.Name = "FileSubMenu";
-			this.FileSubMenu.Size = new System.Drawing.Size(37, 20);
+			this.FileSubMenu.Size = new System.Drawing.Size(35, 20);
 			this.FileSubMenu.Text = "&File";
 			this.FileSubMenu.DropDownOpened += new System.EventHandler(this.FileSubMenu_DropDownOpened);
 			// 
@@ -251,7 +255,7 @@
 			this.NewMenuItem.Image = global::BizHawk.Client.EmuHawk.Properties.Resources.NewFile;
 			this.NewMenuItem.Name = "NewMenuItem";
 			this.NewMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-			this.NewMenuItem.Size = new System.Drawing.Size(195, 22);
+			this.NewMenuItem.Size = new System.Drawing.Size(193, 22);
 			this.NewMenuItem.Text = "&New";
 			this.NewMenuItem.Click += new System.EventHandler(this.NewMenuItem_Click);
 			// 
@@ -260,7 +264,7 @@
 			this.OpenMenuItem.Image = global::BizHawk.Client.EmuHawk.Properties.Resources.OpenFile;
 			this.OpenMenuItem.Name = "OpenMenuItem";
 			this.OpenMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-			this.OpenMenuItem.Size = new System.Drawing.Size(195, 22);
+			this.OpenMenuItem.Size = new System.Drawing.Size(193, 22);
 			this.OpenMenuItem.Text = "&Open...";
 			this.OpenMenuItem.Click += new System.EventHandler(this.OpenMenuItem_Click);
 			// 
@@ -269,7 +273,7 @@
 			this.SaveMenuItem.Image = global::BizHawk.Client.EmuHawk.Properties.Resources.SaveAs;
 			this.SaveMenuItem.Name = "SaveMenuItem";
 			this.SaveMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-			this.SaveMenuItem.Size = new System.Drawing.Size(195, 22);
+			this.SaveMenuItem.Size = new System.Drawing.Size(193, 22);
 			this.SaveMenuItem.Text = "&Save";
 			this.SaveMenuItem.Click += new System.EventHandler(this.SaveMenuItem_Click);
 			// 
@@ -278,14 +282,14 @@
 			this.SaveAsMenuItem.Name = "SaveAsMenuItem";
 			this.SaveAsMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.S)));
-			this.SaveAsMenuItem.Size = new System.Drawing.Size(195, 22);
+			this.SaveAsMenuItem.Size = new System.Drawing.Size(193, 22);
 			this.SaveAsMenuItem.Text = "Save &As...";
 			this.SaveAsMenuItem.Click += new System.EventHandler(this.SaveAsMenuItem_Click);
 			// 
 			// AppendMenuItem
 			// 
 			this.AppendMenuItem.Name = "AppendMenuItem";
-			this.AppendMenuItem.Size = new System.Drawing.Size(195, 22);
+			this.AppendMenuItem.Size = new System.Drawing.Size(193, 22);
 			this.AppendMenuItem.Text = "Append File";
 			// 
 			// RecentSubMenu
@@ -294,7 +298,7 @@
             this.toolStripSeparator4});
 			this.RecentSubMenu.Image = global::BizHawk.Client.EmuHawk.Properties.Resources.Recent;
 			this.RecentSubMenu.Name = "RecentSubMenu";
-			this.RecentSubMenu.Size = new System.Drawing.Size(195, 22);
+			this.RecentSubMenu.Size = new System.Drawing.Size(193, 22);
 			this.RecentSubMenu.Text = "Recent";
 			this.RecentSubMenu.DropDownOpened += new System.EventHandler(this.RecentSubMenu_DropDownOpened);
 			// 
@@ -306,13 +310,13 @@
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(192, 6);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(190, 6);
 			// 
 			// ExitMenuItem
 			// 
 			this.ExitMenuItem.Name = "ExitMenuItem";
 			this.ExitMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-			this.ExitMenuItem.Size = new System.Drawing.Size(195, 22);
+			this.ExitMenuItem.Size = new System.Drawing.Size(193, 22);
 			this.ExitMenuItem.Text = "E&xit";
 			this.ExitMenuItem.Click += new System.EventHandler(this.ExitMenuItem_Click);
 			// 
@@ -331,7 +335,7 @@
             this.GameGenieSeparator,
             this.OpenGameGenieEncoderDecoderMenuItem});
 			this.CheatsSubMenu.Name = "CheatsSubMenu";
-			this.CheatsSubMenu.Size = new System.Drawing.Size(55, 20);
+			this.CheatsSubMenu.Size = new System.Drawing.Size(53, 20);
 			this.CheatsSubMenu.Text = "&Cheats";
 			this.CheatsSubMenu.DropDownOpened += new System.EventHandler(this.CheatsSubMenu_DropDownOpened);
 			// 
@@ -340,7 +344,7 @@
 			this.RemoveCheatMenuItem.Image = global::BizHawk.Client.EmuHawk.Properties.Resources.Delete;
 			this.RemoveCheatMenuItem.Name = "RemoveCheatMenuItem";
 			this.RemoveCheatMenuItem.ShortcutKeyDisplayString = "Delete";
-			this.RemoveCheatMenuItem.Size = new System.Drawing.Size(233, 22);
+			this.RemoveCheatMenuItem.Size = new System.Drawing.Size(217, 22);
 			this.RemoveCheatMenuItem.Text = "&Remove Cheat";
 			this.RemoveCheatMenuItem.Click += new System.EventHandler(this.RemoveCheatMenuItem_Click);
 			// 
@@ -349,21 +353,21 @@
 			this.InsertSeparatorMenuItem.Image = global::BizHawk.Client.EmuHawk.Properties.Resources.InsertSeparator;
 			this.InsertSeparatorMenuItem.Name = "InsertSeparatorMenuItem";
 			this.InsertSeparatorMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
-			this.InsertSeparatorMenuItem.Size = new System.Drawing.Size(233, 22);
+			this.InsertSeparatorMenuItem.Size = new System.Drawing.Size(217, 22);
 			this.InsertSeparatorMenuItem.Text = "Insert Separator";
 			this.InsertSeparatorMenuItem.Click += new System.EventHandler(this.InsertSeparatorMenuItem_Click);
 			// 
 			// toolStripSeparator3
 			// 
 			this.toolStripSeparator3.Name = "toolStripSeparator3";
-			this.toolStripSeparator3.Size = new System.Drawing.Size(230, 6);
+			this.toolStripSeparator3.Size = new System.Drawing.Size(214, 6);
 			// 
 			// MoveUpMenuItem
 			// 
 			this.MoveUpMenuItem.Image = global::BizHawk.Client.EmuHawk.Properties.Resources.MoveUp;
 			this.MoveUpMenuItem.Name = "MoveUpMenuItem";
 			this.MoveUpMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.U)));
-			this.MoveUpMenuItem.Size = new System.Drawing.Size(233, 22);
+			this.MoveUpMenuItem.Size = new System.Drawing.Size(217, 22);
 			this.MoveUpMenuItem.Text = "Move &Up";
 			this.MoveUpMenuItem.Click += new System.EventHandler(this.MoveUpMenuItem_Click);
 			// 
@@ -372,7 +376,7 @@
 			this.MoveDownMenuItem.Image = global::BizHawk.Client.EmuHawk.Properties.Resources.MoveDown;
 			this.MoveDownMenuItem.Name = "MoveDownMenuItem";
 			this.MoveDownMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
-			this.MoveDownMenuItem.Size = new System.Drawing.Size(233, 22);
+			this.MoveDownMenuItem.Size = new System.Drawing.Size(217, 22);
 			this.MoveDownMenuItem.Text = "Move &Down";
 			this.MoveDownMenuItem.Click += new System.EventHandler(this.MoveDownMenuItem_Click);
 			// 
@@ -380,21 +384,21 @@
 			// 
 			this.SelectAllMenuItem.Name = "SelectAllMenuItem";
 			this.SelectAllMenuItem.ShortcutKeyDisplayString = "Ctrl+A";
-			this.SelectAllMenuItem.Size = new System.Drawing.Size(233, 22);
+			this.SelectAllMenuItem.Size = new System.Drawing.Size(217, 22);
 			this.SelectAllMenuItem.Text = "Select &All";
 			this.SelectAllMenuItem.Click += new System.EventHandler(this.SelectAllMenuItem_Click);
 			// 
 			// toolStripSeparator6
 			// 
 			this.toolStripSeparator6.Name = "toolStripSeparator6";
-			this.toolStripSeparator6.Size = new System.Drawing.Size(230, 6);
+			this.toolStripSeparator6.Size = new System.Drawing.Size(214, 6);
 			// 
 			// ToggleMenuItem
 			// 
 			this.ToggleMenuItem.Image = global::BizHawk.Client.EmuHawk.Properties.Resources.Refresh1;
 			this.ToggleMenuItem.Name = "ToggleMenuItem";
 			this.ToggleMenuItem.ShortcutKeyDisplayString = "Enter";
-			this.ToggleMenuItem.Size = new System.Drawing.Size(233, 22);
+			this.ToggleMenuItem.Size = new System.Drawing.Size(217, 22);
 			this.ToggleMenuItem.Text = "&Toggle";
 			this.ToggleMenuItem.Click += new System.EventHandler(this.ToggleMenuItem_Click);
 			// 
@@ -402,19 +406,19 @@
 			// 
 			this.DisableAllCheatsMenuItem.Image = global::BizHawk.Client.EmuHawk.Properties.Resources.Stop;
 			this.DisableAllCheatsMenuItem.Name = "DisableAllCheatsMenuItem";
-			this.DisableAllCheatsMenuItem.Size = new System.Drawing.Size(233, 22);
+			this.DisableAllCheatsMenuItem.Size = new System.Drawing.Size(217, 22);
 			this.DisableAllCheatsMenuItem.Text = "Disable all";
 			this.DisableAllCheatsMenuItem.Click += new System.EventHandler(this.DisableAllCheatsMenuItem_Click);
 			// 
 			// GameGenieSeparator
 			// 
 			this.GameGenieSeparator.Name = "GameGenieSeparator";
-			this.GameGenieSeparator.Size = new System.Drawing.Size(230, 6);
+			this.GameGenieSeparator.Size = new System.Drawing.Size(214, 6);
 			// 
 			// OpenGameGenieEncoderDecoderMenuItem
 			// 
 			this.OpenGameGenieEncoderDecoderMenuItem.Name = "OpenGameGenieEncoderDecoderMenuItem";
-			this.OpenGameGenieEncoderDecoderMenuItem.Size = new System.Drawing.Size(233, 22);
+			this.OpenGameGenieEncoderDecoderMenuItem.Size = new System.Drawing.Size(217, 22);
 			this.OpenGameGenieEncoderDecoderMenuItem.Text = "Game Genie Encoder/Decoder";
 			this.OpenGameGenieEncoderDecoderMenuItem.Click += new System.EventHandler(this.OpenGameGenieEncoderDecoderMenuItem_Click);
 			// 
@@ -432,73 +436,73 @@
             this.toolStripSeparator5,
             this.RestoreWindowSizeMenuItem});
 			this.OptionsSubMenu.Name = "OptionsSubMenu";
-			this.OptionsSubMenu.Size = new System.Drawing.Size(61, 20);
+			this.OptionsSubMenu.Size = new System.Drawing.Size(56, 20);
 			this.OptionsSubMenu.Text = "&Options";
 			this.OptionsSubMenu.DropDownOpened += new System.EventHandler(this.OptionsSubMenu_DropDownOpened);
 			// 
 			// AlwaysLoadCheatsMenuItem
 			// 
 			this.AlwaysLoadCheatsMenuItem.Name = "AlwaysLoadCheatsMenuItem";
-			this.AlwaysLoadCheatsMenuItem.Size = new System.Drawing.Size(199, 22);
+			this.AlwaysLoadCheatsMenuItem.Size = new System.Drawing.Size(192, 22);
 			this.AlwaysLoadCheatsMenuItem.Text = "Always load cheats";
 			this.AlwaysLoadCheatsMenuItem.Click += new System.EventHandler(this.AlwaysLoadCheatsMenuItem_Click);
 			// 
 			// AutoSaveCheatsMenuItem
 			// 
 			this.AutoSaveCheatsMenuItem.Name = "AutoSaveCheatsMenuItem";
-			this.AutoSaveCheatsMenuItem.Size = new System.Drawing.Size(199, 22);
+			this.AutoSaveCheatsMenuItem.Size = new System.Drawing.Size(192, 22);
 			this.AutoSaveCheatsMenuItem.Text = "Autosave cheats";
 			this.AutoSaveCheatsMenuItem.Click += new System.EventHandler(this.AutoSaveCheatsMenuItem_Click);
 			// 
 			// DisableCheatsOnLoadMenuItem
 			// 
 			this.DisableCheatsOnLoadMenuItem.Name = "DisableCheatsOnLoadMenuItem";
-			this.DisableCheatsOnLoadMenuItem.Size = new System.Drawing.Size(199, 22);
+			this.DisableCheatsOnLoadMenuItem.Size = new System.Drawing.Size(192, 22);
 			this.DisableCheatsOnLoadMenuItem.Text = "Disable Cheats on Load";
 			this.DisableCheatsOnLoadMenuItem.Click += new System.EventHandler(this.CheatsOnOffLoadMenuItem_Click);
 			// 
 			// toolStripSeparator7
 			// 
 			this.toolStripSeparator7.Name = "toolStripSeparator7";
-			this.toolStripSeparator7.Size = new System.Drawing.Size(196, 6);
+			this.toolStripSeparator7.Size = new System.Drawing.Size(189, 6);
 			// 
 			// AutoloadMenuItem
 			// 
 			this.AutoloadMenuItem.Name = "AutoloadMenuItem";
-			this.AutoloadMenuItem.Size = new System.Drawing.Size(199, 22);
+			this.AutoloadMenuItem.Size = new System.Drawing.Size(192, 22);
 			this.AutoloadMenuItem.Text = "Autoload";
 			this.AutoloadMenuItem.Click += new System.EventHandler(this.AutoloadMenuItem_Click);
 			// 
 			// SaveWindowPositionMenuItem
 			// 
 			this.SaveWindowPositionMenuItem.Name = "SaveWindowPositionMenuItem";
-			this.SaveWindowPositionMenuItem.Size = new System.Drawing.Size(199, 22);
+			this.SaveWindowPositionMenuItem.Size = new System.Drawing.Size(192, 22);
 			this.SaveWindowPositionMenuItem.Text = "Save Window Position";
 			this.SaveWindowPositionMenuItem.Click += new System.EventHandler(this.SaveWindowPositionMenuItem_Click);
 			// 
 			// AlwaysOnTopMenuItem
 			// 
 			this.AlwaysOnTopMenuItem.Name = "AlwaysOnTopMenuItem";
-			this.AlwaysOnTopMenuItem.Size = new System.Drawing.Size(199, 22);
+			this.AlwaysOnTopMenuItem.Size = new System.Drawing.Size(192, 22);
 			this.AlwaysOnTopMenuItem.Text = "Always on &Top";
 			this.AlwaysOnTopMenuItem.Click += new System.EventHandler(this.AlwaysOnTopMenuItem_Click);
 			// 
 			// FloatingWindowMenuItem
 			// 
 			this.FloatingWindowMenuItem.Name = "FloatingWindowMenuItem";
-			this.FloatingWindowMenuItem.Size = new System.Drawing.Size(199, 22);
+			this.FloatingWindowMenuItem.Size = new System.Drawing.Size(192, 22);
 			this.FloatingWindowMenuItem.Text = "Floating Window";
 			this.FloatingWindowMenuItem.Click += new System.EventHandler(this.FloatingWindowMenuItem_Click);
 			// 
 			// toolStripSeparator5
 			// 
 			this.toolStripSeparator5.Name = "toolStripSeparator5";
-			this.toolStripSeparator5.Size = new System.Drawing.Size(196, 6);
+			this.toolStripSeparator5.Size = new System.Drawing.Size(189, 6);
 			// 
 			// RestoreWindowSizeMenuItem
 			// 
 			this.RestoreWindowSizeMenuItem.Name = "RestoreWindowSizeMenuItem";
-			this.RestoreWindowSizeMenuItem.Size = new System.Drawing.Size(199, 22);
+			this.RestoreWindowSizeMenuItem.Size = new System.Drawing.Size(192, 22);
 			this.RestoreWindowSizeMenuItem.Text = "Restore Default Settings";
 			this.RestoreWindowSizeMenuItem.Click += new System.EventHandler(this.RestoreDefaultsMenuItem_Click);
 			// 
@@ -614,7 +618,7 @@
 			this.LoadGameGenieToolbarItem.Image = ((System.Drawing.Image)(resources.GetObject("LoadGameGenieToolbarItem.Image")));
 			this.LoadGameGenieToolbarItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.LoadGameGenieToolbarItem.Name = "LoadGameGenieToolbarItem";
-			this.LoadGameGenieToolbarItem.Size = new System.Drawing.Size(75, 22);
+			this.LoadGameGenieToolbarItem.Size = new System.Drawing.Size(68, 22);
 			this.LoadGameGenieToolbarItem.Text = "Game Genie";
 			this.LoadGameGenieToolbarItem.ToolTipText = "Open the Game Genie Encoder/Decoder";
 			this.LoadGameGenieToolbarItem.Click += new System.EventHandler(this.OpenGameGenieEncoderDecoderMenuItem_Click);
@@ -643,9 +647,9 @@
 			this.CheatGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.CheatGroupBox.Controls.Add(this.CheatEditor);
-			this.CheatGroupBox.Location = new System.Drawing.Point(432, 66);
+			this.CheatGroupBox.Location = new System.Drawing.Point(432, 105);
 			this.CheatGroupBox.Name = "CheatGroupBox";
-			this.CheatGroupBox.Size = new System.Drawing.Size(202, 327);
+			this.CheatGroupBox.Size = new System.Drawing.Size(202, 288);
 			this.CheatGroupBox.TabIndex = 8;
 			this.CheatGroupBox.TabStop = false;
 			this.CheatGroupBox.Text = "New Cheat";
@@ -656,16 +660,56 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.CheatEditor.Location = new System.Drawing.Point(6, 14);
-			this.CheatEditor.MemoryDomains = null;
 			this.CheatEditor.Name = "CheatEditor";
-			this.CheatEditor.Size = new System.Drawing.Size(190, 307);
+			this.CheatEditor.Size = new System.Drawing.Size(190, 268);
 			this.CheatEditor.TabIndex = 0;
+			// 
+			// DomainDropDown
+			// 
+			this.DomainDropDown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.DomainDropDown.FormattingEnabled = true;
+			this.DomainDropDown.Location = new System.Drawing.Point(505, 53);
+			this.DomainDropDown.Name = "DomainDropDown";
+			this.DomainDropDown.Size = new System.Drawing.Size(129, 21);
+			this.DomainDropDown.TabIndex = 19;
+			this.DomainDropDown.SelectedIndexChanged += new System.EventHandler(this.DomainDropDown_SelectedIndexChanged);
+			// 
+			// DomainLabel
+			// 
+			this.DomainLabel.AutoSize = true;
+			this.DomainLabel.Location = new System.Drawing.Point(456, 58);
+			this.DomainLabel.Name = "DomainLabel";
+			this.DomainLabel.Size = new System.Drawing.Size(43, 13);
+			this.DomainLabel.TabIndex = 18;
+			this.DomainLabel.Text = "Domain";
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(437, 81);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(62, 13);
+			this.label1.TabIndex = 20;
+			this.label1.Text = "Cheat Type";
+			// 
+			// TypeDropDown
+			// 
+			this.TypeDropDown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.TypeDropDown.FormattingEnabled = true;
+			this.TypeDropDown.Location = new System.Drawing.Point(505, 78);
+			this.TypeDropDown.Name = "TypeDropDown";
+			this.TypeDropDown.Size = new System.Drawing.Size(129, 21);
+			this.TypeDropDown.TabIndex = 21;
 			// 
 			// Cheats
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(646, 413);
+			this.Controls.Add(this.TypeDropDown);
+			this.Controls.Add(this.label1);
+			this.Controls.Add(this.DomainDropDown);
+			this.Controls.Add(this.DomainLabel);
 			this.Controls.Add(this.CheatGroupBox);
 			this.Controls.Add(this.MessageLabel);
 			this.Controls.Add(this.TotalLabel);
@@ -755,5 +799,9 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
 		private System.Windows.Forms.ToolStripMenuItem ViewInHexEditorContextMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem FloatingWindowMenuItem;
+		private System.Windows.Forms.ComboBox DomainDropDown;
+		private System.Windows.Forms.Label DomainLabel;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.ComboBox TypeDropDown;
 	}
 }

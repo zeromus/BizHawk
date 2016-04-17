@@ -70,8 +70,9 @@ namespace BizHawk.Client.EmuHawk
 
 		public void Restart()
 		{
-			CheatEditor.MemoryDomains = Core;
-			CheatEditor.Restart();
+			//?
+			//CheatEditor.MemoryDomains = Core;
+			//CheatEditor.Restart();
 		}
 
 		/// <summary>
@@ -150,7 +151,6 @@ namespace BizHawk.Client.EmuHawk
 		private void Cheats_Load(object sender, EventArgs e)
 		{
 			TopMost = Settings.TopMost;
-			CheatEditor.MemoryDomains = Core;
 			LoadConfigSettings();
 			ToggleGameGenieButton();
 			CheatEditor.SetAddEvent(AddCheat);
@@ -726,5 +726,18 @@ namespace BizHawk.Client.EmuHawk
 
 			public ColumnList Columns { get; set; }
 		}
+
+		private void DomainDropDown_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			//if (!_loading)
+			{
+				var domain = Core[DomainDropDown.SelectedItem.ToString()];
+				CheatEditor.Restart(domain);
+
+				//analyze available cheat types
+				TypeDropDown.Items.Clear();
+			}
+		}
+
 	}
 }

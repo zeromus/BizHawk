@@ -11,7 +11,7 @@ namespace BizHawk.Client.EmuHawk
 {
 	public partial class CheatEdit : UserControl
 	{
-		public Emu.IMemoryDomains MemoryDomains { get; set; }
+		//public Emu.IMemoryDomains MemoryDomains { get; set; }
 
 		public CheatEdit()
 		{
@@ -31,30 +31,34 @@ namespace BizHawk.Client.EmuHawk
 		private Action _addCallback;
 		private Action _editCallback;
 
+		Emu.MemoryDomain _memoryDomain;
+
 		private void CheatEdit_Load(object sender, EventArgs e)
 		{
-			Restart();
+			//Restart();
 		}
 
-		public void Restart()
+		public void Restart(Emu.MemoryDomain memDomain)
 		{
-			if (MemoryDomains != null) // the designer needs this check
-			{
-				DomainDropDown.Items.Clear();
-				DomainDropDown.Items.AddRange(MemoryDomains
-					.Where(d => d.CanPoke())
-					.Select(d => d.ToString())
-					.ToArray());
+			_memoryDomain = memDomain;
+			AddressBox.SetHexProperties(memDomain.Size);
+			//if (MemoryDomains != null) // the designer needs this check
+			//{
+			//  DomainDropDown.Items.Clear();
+			//  DomainDropDown.Items.AddRange(MemoryDomains
+			//    .Where(d => d.CanPoke())
+			//    .Select(d => d.ToString())
+			//    .ToArray());
 
-				if (MemoryDomains.HasSystemBus)
-				{
-					DomainDropDown.SelectedItem = MemoryDomains.SystemBus.ToString();
-				}
-				else
-				{
-					DomainDropDown.SelectedItem = MemoryDomains.MainMemory.ToString();
-				}
-			}
+			//  if (MemoryDomains.HasSystemBus)
+			//  {
+			//    DomainDropDown.SelectedItem = MemoryDomains.SystemBus.ToString();
+			//  }
+			//  else
+			//  {
+			//    DomainDropDown.SelectedItem = MemoryDomains.MainMemory.ToString();
+			//  }
+			//}
 
 			SetFormToDefault();
 		}
@@ -65,7 +69,7 @@ namespace BizHawk.Client.EmuHawk
 			SetSizeSelected(_cheat.Size);
 			PopulateTypeDropdown();
 			SetTypeSelected(_cheat.Type);
-			SetDomainSelected(_cheat.Domain);
+			//SetDomainSelected(_cheat.Domain);
 
 			AddressBox.SetHexProperties(_cheat.Domain.Size);
 
@@ -115,10 +119,11 @@ namespace BizHawk.Client.EmuHawk
 
 			NameBox.Text = string.Empty;
 
-			if (MemoryDomains != null)
-			{
-				AddressBox.SetHexProperties(MemoryDomains.SystemBus.Size);
-			}
+			//?
+			//if (MemoryDomains != null)
+			//{
+			//  AddressBox.SetHexProperties(MemoryDomains.SystemBus.Size);
+			//}
 
 			ValueBox.ByteSize = 
 				CompareBox.ByteSize =
@@ -173,17 +178,17 @@ namespace BizHawk.Client.EmuHawk
 			}
 		}
 
-		private void SetDomainSelected(Emu.MemoryDomain domain)
-		{
-			foreach (var item in DomainDropDown.Items)
-			{
-				if (item.ToString() == domain.Name)
-				{
-					DomainDropDown.SelectedItem = item;
-					return;
-				}
-			}
-		}
+		//private void SetDomainSelected(Emu.MemoryDomain domain)
+		//{
+		//  foreach (var item in DomainDropDown.Items)
+		//  {
+		//    if (item.ToString() == domain.Name)
+		//    {
+		//      DomainDropDown.SelectedItem = item;
+		//      return;
+		//    }
+		//  }
+		//}
 
 		private void PopulateTypeDropdown()
 		{
@@ -233,14 +238,14 @@ namespace BizHawk.Client.EmuHawk
 			}
 		}
 
-		private void DomainDropDown_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			if (!_loading)
-			{
-				var domain = MemoryDomains[DomainDropDown.SelectedItem.ToString()];
-				AddressBox.SetHexProperties(domain.Size);
-			}
-		}
+		//private void DomainDropDown_SelectedIndexChanged(object sender, EventArgs e)
+		//{
+		//  if (!_loading)
+		//  {
+		//    var domain = MemoryDomains[DomainDropDown.SelectedItem.ToString()];
+		//    AddressBox.SetHexProperties(domain.Size);
+		//  }
+		//}
 
 		private WatchSize GetCurrentSize()
 		{
@@ -314,12 +319,11 @@ namespace BizHawk.Client.EmuHawk
 			get
 			{
 				Cheat.COMPARISONTYPE comparisonType = Cheat.COMPARISONTYPE.NONE;
-				var domain = MemoryDomains[DomainDropDown.SelectedItem.ToString()];
-				var address = AddressBox.ToRawInt().Value;				
-				if (address < domain.Size)
+				var address = AddressBox.ToRawInt().Value;
+				if (address < _memoryDomain.Size)
 				{
 					var watch = Watch.GenerateWatch(
-						MemoryDomains[DomainDropDown.SelectedItem.ToString()],
+						_memoryDomain,
 						AddressBox.ToRawInt().Value,
 						GetCurrentSize(),
 						Watch.StringToDisplayType(DisplayTypeDropDown.SelectedItem.ToString()),
@@ -353,7 +357,7 @@ namespace BizHawk.Client.EmuHawk
 				}
 				else
 				{
-					MessageBox.Show(address.ToString() + " is not a valid address for the domain " + domain.Name, "Index out of range", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					MessageBox.Show(address.ToString() + " is not a valid address for the domain " + _memoryDomain.Name, "Index out of range", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					return Cheat.Separator;
 				}
 			}
