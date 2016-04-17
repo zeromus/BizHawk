@@ -23,6 +23,13 @@ namespace BizHawk.Emulation.Cores.Nintendo.Gameboy
 		[DllImport("libgambatte.dll", CallingConvention = CallingConvention.Cdecl)]
 		public static extern void gambatte_destroy(IntPtr core);
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="core">opaque state pointer</param>
+		[DllImport("libgambatte.dll", CallingConvention = CallingConvention.Cdecl)]
+		public static extern void gambatte_setgg(IntPtr core, string ggstring);
+
 		[Flags]
 		public enum LoadFlags : uint
 		{

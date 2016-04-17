@@ -11,6 +11,37 @@ namespace BizHawk.Emulation.Cores.Nintendo.Gameboy
 		private List<MemoryDomain> _memoryDomains = new List<MemoryDomain>();
 		internal IMemoryDomains MemoryDomains { get; set; }
 
+		GameGenieCheatEngine GGEngine;
+
+		class GameGenieCheatEngine : CheatEngine
+		{
+			GameGenieCheatEngine(Gameboy core) { this.Core = core; }
+
+			public Gameboy Core;
+			public override string Name { get { return "Game Genie"; } }
+
+			protected override void OnCollectionChanged(System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+			{
+				var ggcheats = new List<string>();
+				foreach (Token cheat in this)
+				{
+					ggcheats.Add(cheat.Code);
+				}
+				var ggstring = string.Join(";", ggcheats);
+				LibGambatte.gambatte_setgg(Core.GambatteState, ggstring);
+			}
+
+			public override ICheatToken Create(string str)
+			{
+				return new Token() { Code = str };
+			}
+
+			public class Token : ICheatToken
+			{
+				public string Code;
+			}
+		}
+
 		void CreateMemoryDomain(LibGambatte.MemoryAreas which, string name)
 		{
 			IntPtr data = IntPtr.Zero;
@@ -34,8 +65,7 @@ namespace BizHawk.Emulation.Cores.Nintendo.Gameboy
 			CreateMemoryDomain(LibGambatte.MemoryAreas.hram, "HRAM");
 
 			// also add a special memory domain for the system bus, where calls get sent directly to the core each time
-
-			_memoryDomains.Add(new MemoryDomain("System Bus", 65536, MemoryDomain.Endian.Little,
+			var mdSysbus = new MemoryDomain("System Bus", 65536, MemoryDomain.Endian.Little,
 				delegate(long addr)
 				{
 					if (addr < 0 || addr >= 65536)
@@ -47,7 +77,10 @@ namespace BizHawk.Emulation.Cores.Nintendo.Gameboy
 					if (addr < 0 || addr >= 65536)
 						throw new ArgumentOutOfRangeException();
 					LibGambatte.gambatte_cpuwrite(GambatteState, (ushort)addr, val);
-				}));
+				});
+			_memoryDomains.Add(mdSysbus);
+
+			mdSysbus.CheatInterfaces = new [] { GGEngine };
 
 			MemoryDomains = new MemoryDomainList(_memoryDomains);
 			(ServiceProvider as BasicServiceProvider).Register<IMemoryDomains>(MemoryDomains);

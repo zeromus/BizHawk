@@ -19,6 +19,12 @@ namespace BizHawk.Emulation.Common
 			PokeByte = pokeByte;
 		}
 
+		/// <summary>
+		/// Cheats engines go on MemoryDomains instead of on the core because a generic 'freeze' type cheat inherently has a MemoryDomain argument.
+		/// We might wish to use it, if it's available, for general purpose 'freezing' an address, instead of pulsing.
+		/// </summary>
+		public CheatEngine[] CheatInterfaces { get; set; }
+
 		public string Name { get; private set; }
 
 		public long Size { get; private set; }
